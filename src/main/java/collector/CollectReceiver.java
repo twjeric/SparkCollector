@@ -7,13 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CollectReceiver extends Receiver<String> {
-    private List<String> url = new LinkedList<>();
+    private List<String> links = new LinkedList<>();
     private int iteration;
-    private Crawler crawler = new Crawler();
 
-    public CollectReceiver(String url , int iteration) {
+    public CollectReceiver(String link, int iteration) {
         super(StorageLevel.MEMORY_AND_DISK_2());
-        this.url.add(url);
+        this.links.add(link);
         this.iteration = iteration;
     }
 
@@ -29,17 +28,16 @@ public class CollectReceiver extends Receiver<String> {
 
     private void receive() {
         try {
-            while (!isStopped() && this.iteration > 0) {
-                List<String> links = crawler.crawl(this.url.get(0));
-//                System.out.println("Found links: " + links.size());
-                this.url.remove(0);
-                this.url.addAll(links);
-//                System.out.println(crawler.crawl(url.get(0)));
-//                store(crawler.crawl(url.get(0)).get(0));
-                url.forEach(this::store);
+            while (!isStopped() && this.iteration > 0 && this.links.size() > 0) {
+                String link = this.links.remove(0);
+                Crawler crawler = new Crawler(link);
+                List<String> links = crawler.getLinks();
+                this.links.addAll(links);
+//                System.out.println(crawler.crawl(links.get(0)));
+//                store(crawler.crawl(links.get(0)).get(0));
+                crawler.baseUrls().forEach(this::store);
                 this.iteration -= 1;
             }
-//            restart("Trying to connect again");
         }  catch(Throwable t) {
             // restart if there is any other error
             restart("Error receiving data", t);

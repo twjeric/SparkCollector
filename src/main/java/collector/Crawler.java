@@ -14,29 +14,31 @@ public class Crawler {
     private static final String USER_AGENT =
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
     private Document htmlDocument;
+    private List<String> links = new LinkedList<>();
+    private List<String> urls = new LinkedList<>();
 
-    public List<String> crawl(String url) {
-        List<String> links = new LinkedList<>();
+
+    public Crawler(String url) {
         try {
             Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
             Document htmlDocument = connection.get();
             this.htmlDocument = htmlDocument;
-            if (connection.response().statusCode() == 200) {
-                System.out.println("\n**Visiting** Received web page at " + url);
-            }
-            if (!connection.response().contentType().contains("text/html")) {
-                System.out.println("**Failure** Retrieved something other than HTML");
-            }
             Elements linksOnPage = htmlDocument.select("a[href]");
-            System.out.println("Found (" + linksOnPage.size() + ") links");
             for (Element link : linksOnPage) {
                 links.add(link.absUrl("href"));
+                urls.add(link.baseUri().split("://")[1]);
             }
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }
-        return links;
+    }
 
+    public List<String> baseUrls() {
+        return urls;
+    }
+
+    public List<String> getLinks() {
+        return links;
     }
 
     public boolean searchForWord(String searchWord) {
@@ -52,8 +54,8 @@ public class Crawler {
 
 
     public static void main(String[] args) {
-        Crawler crawler = new Crawler();
-        List<String> lists = crawler.crawl("https://jsoup.org");
+        Crawler crawler = new Crawler("https://jsoup.org");
+        List<String> lists = crawler.getLinks();
         System.out.println(lists);
     }
 }
