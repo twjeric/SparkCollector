@@ -13,4 +13,4 @@ Build:
 
 Run: get stream inputs from tcp connection
 
-`$ spark-submit --class collector.Network --master local[4] target/simple-project-1.0.jar localhost 9999` 
+`$ spark-submit --class collector.Network target/simple-project-1.0.jar` 
