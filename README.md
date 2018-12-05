@@ -11,6 +11,6 @@ Build:
 
 `$ mvn package`
 
-Run: get stream inputs from tcp connection
+Run: collect data from one seed.
 
 `$ spark-submit --class collector.Network target/simple-project-1.0.jar` 
