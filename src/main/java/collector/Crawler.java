@@ -4,25 +4,32 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.api.java.JavaPairDStream;
+import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import scala.Tuple2;
 
-public class Crawler {
-    private static final String USER_AGENT =
-            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
-    private Document htmlDocument;
-    private List<String> links = new LinkedList<>();
-    private List<String> urls = new LinkedList<>();
+public class Crawler extends AbstractCollector {
+    List<String> links = new LinkedList<>();
 
+    public Crawler() {
+        links.add("http://www.bbc.com");
+    }
 
-    public Crawler(String url) {
+    public List<String> getAndProcess() {
+        String USER_AGENT =
+                "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
+        List<String> urls = new LinkedList<>();
+
         try {
-            Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
+            String seed = links.remove(0);
+            Connection connection = Jsoup.connect(seed).userAgent(USER_AGENT);
             Document htmlDocument = connection.get();
-            this.htmlDocument = htmlDocument;
             Elements linksOnPage = htmlDocument.select("a[href]");
             for (Element link : linksOnPage) {
                 links.add(link.absUrl("href"));
@@ -31,31 +38,22 @@ public class Crawler {
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }
-    }
-
-    public List<String> baseUrls() {
         return urls;
     }
 
-    public List<String> getLinks() {
-        return links;
+    public void postProcess(JavaReceiverInputDStream<String> lines) {
+        JavaPairDStream<String, Long> count = lines.countByValueAndWindow(
+                Durations.minutes(10), Durations.seconds(5)
+        );
+        JavaPairDStream<Long, String> order = count
+                .mapToPair(Tuple2::swap)
+                .transformToPair(s -> s.sortByKey(false));
+        order.print();
     }
-
-    public boolean searchForWord(String searchWord) {
-        if (this.htmlDocument == null) {
-            System.out.println("ERROR! Call crawl() before performing analysis on the document");
-            return false;
-        }
-        System.out.println("Searching for the word " + searchWord + "...");
-        String bodyText = this.htmlDocument.body().text();
-        return bodyText.toLowerCase().contains(searchWord.toLowerCase());
-    }
-
-
 
     public static void main(String[] args) {
-        Crawler crawler = new Crawler("https://jsoup.org");
-        List<String> lists = crawler.getLinks();
+        Crawler crawler = new Crawler();
+        List<String> lists = crawler.getAndProcess();
         System.out.println(lists);
     }
 }

@@ -13,4 +13,16 @@ Build:
 
 Run: collect data from one seed.
 
-`$ spark-submit --class collector.Network target/simple-project-1.0.jar` 
+`$ spark-submit --class collector.Example target/simple-project-1.0.jar`
+
+Output examples: 
+
+- Time: 1543984800000 ms
+- (293,www.bbc.com#)
+- (293,www.bbc.com#orb-modules)
+- (293,www.bbc.com)
+- (278,www.bbc.co.uk/news)
+- (268,www.bbc.co.uk)
+- (243,www.bbc.co.uk/sport)
+- (74,www.bbc.co.uk/accessibility/)
+
