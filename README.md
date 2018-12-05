@@ -26,5 +26,9 @@ Output examples:
 - (278,www.bbc.co.uk/news)
 - (268,www.bbc.co.uk)
 - (243,www.bbc.co.uk/sport)
-- (74,www.bbc.co.uk/accessibility/)
+- (74,www.bbc.co.uk/accessibility)
+
+Http Request:
+
+- http://localhost:8500
 
