@@ -34,8 +34,13 @@ public class Network {
         JavaReceiverInputDStream<String> lines = ssc.receiverStream(
                 new CollectReceiver("http://www.bbc.com", 115)
         );
-        JavaPairDStream<String, Long> count = lines.countByValueAndWindow(Durations.minutes(10), Durations.seconds(5));
-        count.print();
+        JavaPairDStream<String, Long> count = lines.countByValueAndWindow(
+                Durations.minutes(10), Durations.seconds(5)
+        );
+        JavaPairDStream<Long, String> order = count
+                .mapToPair(Tuple2::swap)
+                .transformToPair(s -> s.sortByKey(false));
+        order.print();
         ssc.start();
         ssc.awaitTermination();
     }
