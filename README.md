@@ -7,6 +7,8 @@ MacOS with Apache-Spark 2.4.0 and Java8 installed.
 *   Apache-Spark `$ brew install apache-spark`
 ## Usage
 
+Write code: extends AbstractCollector to use the project
+
 Build:
 
 `$ mvn package`
