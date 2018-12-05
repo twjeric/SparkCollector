@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
@@ -16,9 +17,14 @@ import scala.Tuple2;
 
 public class Crawler extends AbstractCollector {
     List<String> links = new LinkedList<>();
+    String results;
 
     public Crawler() {
         links.add("http://www.bbc.com");
+    }
+
+    public String results() {
+        return results;
     }
 
     public List<String> getAndProcess() {
@@ -48,7 +54,12 @@ public class Crawler extends AbstractCollector {
         JavaPairDStream<Long, String> order = count
                 .mapToPair(Tuple2::swap)
                 .transformToPair(s -> s.sortByKey(false));
-        order.print();
+
+        order.foreachRDD(rdd -> {
+            List result = rdd.take(3);
+            results = new Gson().toJson(result);
+            System.out.println(results);
+        });
     }
 
     public static void main(String[] args) {

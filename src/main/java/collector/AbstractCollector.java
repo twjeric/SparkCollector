@@ -20,6 +20,9 @@ abstract public class AbstractCollector implements Serializable {
     void postProcess(JavaReceiverInputDStream<String> input) {
     }
 
+    String results() {
+        return "";
+    }
 
     void run() throws Exception {
         Logger.getLogger("org").setLevel(Level.OFF);
