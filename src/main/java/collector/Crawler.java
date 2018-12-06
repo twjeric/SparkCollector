@@ -18,9 +18,21 @@ import scala.Tuple2;
 public class Crawler extends AbstractCollector {
     List<String> links = new LinkedList<>();
     String results;
+    int interval;
 
     public Crawler() {
-        links.add("http://www.bbc.com");
+        this.interval = 3;
+        links.add("https://www.ucla.edu");
+    }
+
+    public Crawler(String initalURL, int second) {
+        this.interval = second;
+        links.add(initalURL);
+    }
+
+    public Crawler(List<String> initalURLs, int second) {
+        this.interval = second;
+        links.addAll(initalURLs);
     }
 
     public String results() {
@@ -49,14 +61,14 @@ public class Crawler extends AbstractCollector {
 
     public void postProcess(JavaReceiverInputDStream<String> lines) {
         JavaPairDStream<String, Long> count = lines.countByValueAndWindow(
-                Durations.minutes(10), Durations.seconds(5)
+                Durations.minutes(10), Durations.seconds(3)
         );
         JavaPairDStream<Long, String> order = count
                 .mapToPair(Tuple2::swap)
                 .transformToPair(s -> s.sortByKey(false));
 
         order.foreachRDD(rdd -> {
-            List result = rdd.take(3);
+            List result = rdd.take(5);
             results = new Gson().toJson(result);
             System.out.println(results);
         });

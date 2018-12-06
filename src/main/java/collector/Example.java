@@ -12,7 +12,8 @@ import java.net.InetSocketAddress;
 public class Example {
     public static void main(String[] args) throws Exception {
         // extends AbstractCollector to use the project
-        AbstractCollector crawler = new Crawler();
+        String initalURL = "https://www.google.com/search?q=ucla";
+        AbstractCollector crawler = new Crawler(initalURL, 3);
         buildServer(crawler);
         crawler.run();
     }

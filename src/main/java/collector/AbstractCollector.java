@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.util.List;
 
 abstract public class AbstractCollector implements Serializable {
+    int interval = 1;
+
     // get and process the results.
     List<String> getAndProcess() {
         return null;
@@ -20,17 +22,17 @@ abstract public class AbstractCollector implements Serializable {
     void postProcess(JavaReceiverInputDStream<String> input) {
     }
 
-    String results() {
+    public String results() {
         return "";
     }
 
-    void run() throws Exception {
+    public void run() throws Exception {
         Logger.getLogger("org").setLevel(Level.OFF);
         SparkConf sparkConf = new SparkConf()
                 .setAppName("SparkCollector")
                 .setMaster("local[4]")
                 .set("spark.eventLog.enabled", "false");
-        JavaStreamingContext ssc = new JavaStreamingContext(sparkConf, Durations.seconds(5));
+        JavaStreamingContext ssc = new JavaStreamingContext(sparkConf, Durations.seconds(interval));
         ssc.checkpoint("check");
         JavaReceiverInputDStream<String> lines = ssc.receiverStream(
                 new CollectReceiver(this)
