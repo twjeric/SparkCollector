@@ -60,6 +60,7 @@ public class Crawler extends AbstractCollector {
     }
 
     public void postProcess(JavaReceiverInputDStream<String> lines) {
+        int rank = 5;
         JavaPairDStream<String, Long> count = lines.countByValueAndWindow(
                 Durations.minutes(10), Durations.seconds(3)
         );
@@ -68,7 +69,7 @@ public class Crawler extends AbstractCollector {
                 .transformToPair(s -> s.sortByKey(false));
 
         order.foreachRDD(rdd -> {
-            List result = rdd.take(5);
+            List result = rdd.take(rank);
             results = new Gson().toJson(result);
             System.out.println(results);
         });

@@ -28,17 +28,16 @@ Output examples:
 - (243,www.bbc.co.uk/sport)
 - (74,www.bbc.co.uk/accessibility)
 
-Http Request:
-
+## Http Request:
+### URL crawler: Return top 5 URLs
 - `http://localhost:8501/Crawler?start=1&url=https://www.google.com/search?q=ucla` start URL crawler
 - `http://localhost:8501/Crawler?start=2` get results from URL crawler
 - `http://localhost:8501/Crawler?start=0` stop URL crawler
-
+### Website crawler: Return top 10 websites
 - `http://localhost:8502/Crawler?start=1&url=https://www.google.com/search?q=china` start website crawler
 - `http://localhost:8502/Crawler?start=2` get results from website crawler
 - `http://localhost:8502/Crawler?start=0` stop website crawler
-
-- `http://localhost:8503/Crawler?start=1&url=https://www.google.com/search?q=china` start keyword crawler
+### Keyword crawler: Return top 20 keywords (with length > 3)
+- `http://localhost:8503/Crawler?start=1&url=https://www.bbc.com/` start keyword crawler
 - `http://localhost:8503/Crawler?start=2` get results from keyword crawler
 - `http://localhost:8503/Crawler?start=0` stop keyword crawler
-
