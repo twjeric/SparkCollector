@@ -9,89 +9,57 @@
   <meta name="author" content="Weijie Tang">
 
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/demo.css">
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 
 </head>
 
 <body>
+<div class="container">
   <input type="hidden" id="base_url" name="base_url" value="http://localhost:">
   <input type="hidden" id="port" name="port" value="0000">
-  <div id="logo">SparkCollector</div>
+  <div id="logo" class="h1 text-primary text-center">SparkCollector</div>
 
-  <div id="option_1">
-  	<div>URL urlCrawler: Return top 5 URLs</div>
-  	<input type="text" id="q_url" name="q_url" value="https://www.google.com/search?q=ucla">
-    <input type="submit" value="Start" onclick="send(8501)">
-    <input type="submit" value="Stop" onclick="submit(0);">
+  <div class="row">
+  	<div class="col-md-6">
+	  <div id="option_1">
+	  	<div class="row h4 text-primary">URL SparkCollector: Return top 5 URLs</div>
+	  	<div class="row">
+	  	  <input class="col-md-7" type="text" id="q_url" name="q_url" value="https://www.google.com/search?q=ucla">
+	      <input class="col-md-2 btn btn-success" type="submit" value="Start" onclick="send(8501)">
+	      <input class="col-md-2 btn btn-danger" type="submit" value="Stop" onclick="submit(0);">
+	    </div>
+	  </div>
+
+	  <div id="option_2">
+	  	<div class="row h4 text-primary">Website SparkCollector: Return top 10 websites</div>
+	  	<div class="row">
+	      <input class="col-md-7" type="text" id="q_url" name="q_url" value="https://www.google.com/search?q=china">
+	      <input class="col-md-2 btn btn-success" type="submit" value="Start" onclick="send(8502)">
+	      <input class="col-md-2 btn btn-danger" type="submit" value="Stop" onclick="submit(0);">
+	    </div>
+	  </div>
+
+	  <div id="option_3">
+	  	<div class="row h4 text-primary">Keyword SparkCollector: Return top 20 keywords (with length > 3)</div>
+	  	<div class="row">
+	      <input class="col-md-7" type="text" id="q_url" name="q_url" value="https://www.bbc.com/">
+	      <input class="col-md-2 btn btn-success" type="submit" value="Start" onclick="send(8503)">
+	      <input class="col-md-2 btn btn-danger" type="submit" value="Stop" onclick="submit(0);">
+	    </div>
+	  </div>
+    </div>
+
+    <div id="result" class="col-md-5 ml-auto mr-auto">
+	  <div class="h4 text-primary">Result:</div>
+	  <ol id="list" class="list-group"></ol>
+	</div>
   </div>
 
-  <div id="option_2">
-  	<div>Website urlCrawler: Return top 10 websites</div>
-    <input type="text" id="q_url" name="q_url" value="https://www.google.com/search?q=china">
-    <input type="submit" value="Start" onclick="send(8502)">
-    <input type="submit" value="Stop" onclick="submit(0);">
-  </div>
+</div>
 
-  <div id="option_3">
-  	<div>Keyword urlCrawler: Return top 20 keywords (with length > 3)</div>
-    <input type="text" id="q_url" name="q_url" value="https://www.bbc.com/">
-    <input type="submit" value="Start" onclick="send(8503)">
-    <input type="submit" value="Stop" onclick="submit(0);">
-  </div>
-
-  <div id="result">
-  	<div>Result:</div>
-  	<ol id="list"></ol>
-  </div>
-
-  <script type="text/javascript">
-  	var myInterval;
-
-  	function getUrl(start) {
-  		let base_url = $('#base_url').val();
-  		let port = $('#port').val();
-  		let url = base_url + port + '/Crawler?start=' + start;
-  		if (start == 1) url = url + '&url=' + $('#q_url').val();
-  		return url;
-  	}
-
-  	function update() {
-  	  submit(2);
-  	}
-
-  	function send(port) {
-  	  $('#port').val(port);
-  	  submit(1);
-  	  myInterval = window.setInterval(update, 3000);
-  	}
-
-    function submit(start) {
-      if (start==0) window.clearInterval(myInterval);
-      let url = getUrl(start);
-      console.log(url);
-
-      let xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          console.log(xhr.response);
-          display(xhr.response);
-        }
-      }
-      xhr.open('get', url, true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-      xhr.send();
-    }
-
-    function display(data) {
-      let ol = $('#list');
-      ol.empty();
-      $.each(data, function(idx, item){
-        ol.append('<li >' + item['_1'] + ': ' + item['_2'] +'</li>');
-      });
-    }
-  </script>
+<script type="text/javascript" src="js/demo.js"></script>
 
 </body>
 </html>
