@@ -12,6 +12,8 @@ import java.util.List;
 
 abstract public class AbstractCollector implements Serializable {
     int interval = 1;
+    int checkIntervalMs = 1000;
+    boolean stopFlag = false;
 
     // get and process the results.
     List<String> getAndProcess() {
@@ -26,12 +28,13 @@ abstract public class AbstractCollector implements Serializable {
         return "";
     }
 
-    public void run() throws Exception {
+    public void run() throws InterruptedException {
         Logger.getLogger("org").setLevel(Level.OFF);
         SparkConf sparkConf = new SparkConf()
                 .setAppName("SparkCollector")
                 .setMaster("local[4]")
                 .set("spark.eventLog.enabled", "false");
+        sparkConf.set("spark.driver.allowMultipleContexts","true");
         JavaStreamingContext ssc = new JavaStreamingContext(sparkConf, Durations.seconds(interval));
         ssc.checkpoint("check");
         JavaReceiverInputDStream<String> lines = ssc.receiverStream(
@@ -39,6 +42,18 @@ abstract public class AbstractCollector implements Serializable {
         );
         postProcess(lines);
         ssc.start();
-        ssc.awaitTermination();
+        //ssc.awaitTermination();
+        while (true) {
+            ssc.awaitTerminationOrTimeout(checkIntervalMs);
+            if (stopFlag) {
+                System.out.println("Stopping JavaStreamingContext...");
+                ssc.stop(true, true);
+                break;
+            }
+        }
+    }
+
+    public void stop() {
+        stopFlag = true;
     }
 }

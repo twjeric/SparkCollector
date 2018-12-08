@@ -33,7 +33,8 @@ public class CollectReceiver extends Receiver<String> {
             }
         }  catch(Throwable t) {
             // restart if there is any other error
-            restart("Error receiving data", t);
+            // restart("Error receiving data", t);
+            stop("Stop!");
         }
     }
 }

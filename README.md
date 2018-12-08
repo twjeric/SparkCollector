@@ -30,5 +30,15 @@ Output examples:
 
 Http Request:
 
-- http://localhost:8500
+- `http://localhost:8501/Crawler?start=1&url=https://www.google.com/search?q=ucla` start URL crawler
+- `http://localhost:8501/Crawler?start=2` get results from URL crawler
+- `http://localhost:8501/Crawler?start=0` stop URL crawler
+
+- `http://localhost:8502/Crawler?start=1&url=https://www.google.com/search?q=china` start website crawler
+- `http://localhost:8502/Crawler?start=2` get results from website crawler
+- `http://localhost:8502/Crawler?start=0` stop website crawler
+
+- `http://localhost:8503/Crawler?start=1&url=https://www.google.com/search?q=china` start keyword crawler
+- `http://localhost:8503/Crawler?start=2` get results from keyword crawler
+- `http://localhost:8503/Crawler?start=0` stop keyword crawler
 
