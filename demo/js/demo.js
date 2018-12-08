@@ -4,7 +4,7 @@ function getUrl(start) {
 	let base_url = $('#base_url').val();
 	let port = $('#port').val();
 	let url = base_url + port + '/Crawler?start=' + start;
-	if (start == 1) url = url + '&url=' + $('#q_url').val();
+	if (start == 1) url = url + '&url=' + $('#q_url_'+port).val();
 	return url;
 }
 
