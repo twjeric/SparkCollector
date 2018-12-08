@@ -42,6 +42,7 @@ public class KeywordCrawlerServer {
             throws IOException, InterruptedException {
         String requestMethod = exchange.getRequestMethod();
         System.out.println(exchange.getRequestURI().getQuery());
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         if (requestMethod.equalsIgnoreCase("GET")) {
             URI requestedUri = exchange.getRequestURI();
             Map<String, String> parameters = splitQuery(requestedUri);

@@ -1,5 +1,6 @@
 import collector.AbstractCollector;
 import collector.WebsiteCrawler;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -42,6 +43,7 @@ public class WebsiteCrawlerServer {
             throws IOException, InterruptedException {
         String requestMethod = exchange.getRequestMethod();
         System.out.println(exchange.getRequestURI().getQuery());
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         if (requestMethod.equalsIgnoreCase("GET")) {
             URI requestedUri = exchange.getRequestURI();
             Map<String, String> parameters = splitQuery(requestedUri);
