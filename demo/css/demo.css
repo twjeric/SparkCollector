@@ -1,0 +1,23 @@
+div {
+	margin-top: 1.25em;
+}
+
+.btn {
+	margin-left: 6px;
+}
+
+.badge {
+	margin-right: .75rem;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, .btn {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+body {
+	background-image: url("../img/background.png");
+}
+
+.list-group-item {
+	background-color: rgba(255,255,255,0.616)
+}
