@@ -1,5 +1,5 @@
 import collector.AbstractCollector;
-import collector.Crawler;
+import collector.UrlCrawler;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -57,7 +57,7 @@ public class UrlCrawlerServer {
                         errorHandle(exchange, "Crawler already started!");
                         return;
                     }
-                    collector = new Crawler(initalURL, second);
+                    collector = new UrlCrawler(initalURL, second);
                     new Thread(() -> {
                         try {
                             collector.run();
@@ -67,11 +67,7 @@ public class UrlCrawlerServer {
                             throw new RuntimeException();
                         }
                     }).start();
-                    String response = "Success!";
-                    exchange.sendResponseHeaders(200, response.getBytes().length); //results code and length
-                    OutputStream os = exchange.getResponseBody();
-                    os.write(response.getBytes());
-                    os.close();
+                    msgHandle(exchange,"Success!");
                 }
                 else if (start == 0) {  // stop the crawler
                     if (collector == null) {
@@ -79,12 +75,7 @@ public class UrlCrawlerServer {
                         return;
                     }
                     collector.stop();  // stop previous collector
-                    String response = "Successfully stop crawler!";
-                    exchange.sendResponseHeaders(200, response.getBytes().length); //results code and length
-                    OutputStream os = exchange.getResponseBody();
-                    os.write(response.getBytes());
-                    os.close();
-                    Thread.sleep(1100);
+                    msgHandle(exchange,"Successfully stop crawler!");
                 }
                 else {  // request data from the running collect
                     if (collector == null) {
@@ -101,6 +92,14 @@ public class UrlCrawlerServer {
             else
                 errorHandle(exchange, "Needs start parameter!");
         }
+    }
+
+    public static void msgHandle(HttpExchange exchange, String msg) throws IOException {
+        String response = msg;
+        exchange.sendResponseHeaders(200, response.getBytes().length); //results code and length
+        OutputStream os = exchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
     public static void errorHandle(HttpExchange exchange, String msg) throws IOException {

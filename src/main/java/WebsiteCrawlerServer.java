@@ -1,6 +1,4 @@
 import collector.AbstractCollector;
-import collector.Crawler;
-import collector.KeywordCrawler;
 import collector.WebsiteCrawler;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;

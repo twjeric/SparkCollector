@@ -13,7 +13,7 @@ public class Example {
     public static void main(String[] args) throws Exception {
         // extends AbstractCollector to use the project
         String initalURL = "https://www.google.com/search?q=ucla";
-        AbstractCollector crawler = new Crawler(initalURL, 3);
+        AbstractCollector crawler = new UrlCrawler(initalURL, 3);
         buildServer(crawler);
         crawler.run();
     }

@@ -15,22 +15,22 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import scala.Tuple2;
 
-public class Crawler extends AbstractCollector {
+public class UrlCrawler extends AbstractCollector {
     List<String> links = new LinkedList<>();
     String results;
     int interval;
 
-    public Crawler() {
+    public UrlCrawler() {
         this.interval = 3;
         links.add("https://www.ucla.edu");
     }
 
-    public Crawler(String initalURL, int second) {
+    public UrlCrawler(String initalURL, int second) {
         this.interval = second;
         links.add(initalURL);
     }
 
-    public Crawler(List<String> initalURLs, int second) {
+    public UrlCrawler(List<String> initalURLs, int second) {
         this.interval = second;
         links.addAll(initalURLs);
     }
@@ -76,8 +76,8 @@ public class Crawler extends AbstractCollector {
     }
 
     public static void main(String[] args) {
-        Crawler crawler = new Crawler();
-        List<String> lists = crawler.getAndProcess();
+        UrlCrawler urlCrawler = new UrlCrawler();
+        List<String> lists = urlCrawler.getAndProcess();
         System.out.println(lists);
     }
 }
