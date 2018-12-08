@@ -41,3 +41,8 @@ Output examples:
 - `http://localhost:8503/Crawler?start=1&url=https://www.bbc.com/` start keyword urlCrawler
 - `http://localhost:8503/Crawler?start=2` get results from keyword urlCrawler
 - `http://localhost:8503/Crawler?start=0` stop keyword urlCrawler
+
+Return Json Object
+- `[{"_1":325,"_2":"www.google.com/about/"},{"_1":294,"_2":"www.google.com/search?q\u003ducla#"},...,{"_1":287,"_2":"www.ucla.edu/"}]`
+- `[{"_1":20260,"_2":"en.wikipedia.org"},{"_1":2648,"_2":"www.google.com"},{"_1":1130,"_2":"www.cia.gov"},{"_1":368,"_2":"www.aljazeera.com"},{"_1":322,"_2":"www.nytimes.com"},{"_1":319,"_2":"www.china.org.cn"},{"_1":290,"_2":"www.cnbc.com"},{"_1":283,"_2":"www.reuters.com"},{"_1":175,"_2":"www.bbc.com"},{"_1":171,"_2":"support.google.com"}]`
+- `[{"_1":38,"_2":"with"},{"_1":18,"_2":"from"},{"_1":12,"_2":"mins"},...,{"_1":7,"_2":"weekend"}]`
