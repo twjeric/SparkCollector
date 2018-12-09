@@ -20,6 +20,7 @@ function send(port) {
     case 8503: $('#result_title').html('Keyword SparkCollector Result:'); break;
     default: $('#result_title').html('Result:');
   }
+  $('#list').empty();
   submit(1);
   myInterval = window.setInterval(update, 3000);
 }
