@@ -14,6 +14,12 @@ function update() {
 
 function send(port) {
   $('#port').val(port);
+  switch(port) {
+    case 8501: $('#result_title').html('URL SparkCollector Result:'); break;
+    case 8502: $('#result_title').html('Website SparkCollector Result:'); break;
+    case 8503: $('#result_title').html('Keyword SparkCollector Result:'); break;
+    default: $('#result_title').html('Result:');
+  }
   submit(1);
   myInterval = window.setInterval(update, 3000);
 }
@@ -28,7 +34,7 @@ function submit(start) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
       console.log(xhr.response);
-      display(xhr.response);
+      if (start==2) display(xhr.response);
     }
   }
   xhr.open('get', url, true);
