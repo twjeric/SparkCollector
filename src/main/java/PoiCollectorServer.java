@@ -1,5 +1,5 @@
 import collector.AbstractCollector;
-import collector.UrlCrawler;
+import collector.POICollector;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -13,7 +13,7 @@ import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class UrlCrawlerServer {
+public class PoiCollectorServer {
 
     static AbstractCollector collector = null;
     static int second = 3;
@@ -23,11 +23,11 @@ public class UrlCrawlerServer {
     }
 
     public static void setupServer() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8501), 0);
-        HttpContext crawlerContext = server.createContext("/Crawler");  // context for crawler application
-        crawlerContext.setHandler(exchange -> {
+        HttpServer server = HttpServer.create(new InetSocketAddress(8504), 0);
+        HttpContext poiContext = server.createContext("/Poi");  // context for crawler application
+        poiContext.setHandler(exchange -> {
             try {
-                crawlerHandle(exchange);
+                poiCollectorHandle(exchange);
             }
             catch (InterruptedException ex) {
                 System.err.println("InterruptedException!");
@@ -38,7 +38,7 @@ public class UrlCrawlerServer {
         System.out.println("Server starts");
     }
 
-    public static void crawlerHandle(HttpExchange exchange)
+    public static void poiCollectorHandle(HttpExchange exchange)
             throws IOException, InterruptedException {
         String requestMethod = exchange.getRequestMethod();
         System.out.println(exchange.getRequestURI().getQuery());
@@ -49,16 +49,17 @@ public class UrlCrawlerServer {
             if (parameters.containsKey("start")) {
                 int start = Integer.parseInt(parameters.get("start"));
                 if (start == 1) {  // start a new collector
-                    if (!parameters.containsKey("url")) {
-                        errorHandle(exchange, "Needs initial URL!");
+                    if (!parameters.containsKey("lon") || !parameters.containsKey("lat")) {
+                        errorHandle(exchange, "Needs initial coordinate!");
                         return;
                     }
-                    String initalURL = parameters.get("url");
+                    double lon = Double.parseDouble(parameters.get("lon"));
+                    double lat = Double.parseDouble(parameters.get("lat"));
                     if (collector != null) {
                         errorHandle(exchange, "Crawler already started!");
                         return;
                     }
-                    collector = new UrlCrawler(initalURL, second);
+                    collector = new POICollector(second, lon, lat);
                     new Thread(() -> {
                         try {
                             collector.run();
@@ -77,17 +78,21 @@ public class UrlCrawlerServer {
                     }
                     collector.stop();  // stop previous collector
                     msgHandle(exchange,"Successfully stop crawler!");
-                    Thread.sleep(1100);
                 }
                 else {  // request data from the running collect
                     if (collector == null) {
                         errorHandle(exchange, "Crawler NOT started yet!");
                         return;
                     }
-                    String response = collector.results();
-                    exchange.sendResponseHeaders(200, response.getBytes().length); //results code and length
+                    String jsonString = collector.results();
+                    if (jsonString == null)
+                        jsonString = "";
+                    System.out.println(jsonString);
+                    byte[] response = jsonString.getBytes("UTF-8");
+                    exchange.getResponseHeaders().set("Content-Type", "application/json;charset=UTF-8");
+                    exchange.sendResponseHeaders(200, response.length); //results code and length
                     OutputStream os = exchange.getResponseBody();
-                    os.write(response.getBytes());
+                    os.write(response);
                     os.close();
                 }
             }
@@ -96,7 +101,7 @@ public class UrlCrawlerServer {
         }
     }
 
-    public static void msgHandle(HttpExchange exchange, String msg) throws IOException {
+    private static void msgHandle(HttpExchange exchange, String msg) throws IOException {
         String response = msg;
         exchange.sendResponseHeaders(200, response.getBytes().length); //results code and length
         OutputStream os = exchange.getResponseBody();
@@ -104,7 +109,7 @@ public class UrlCrawlerServer {
         os.close();
     }
 
-    public static void errorHandle(HttpExchange exchange, String msg) throws IOException {
+    private static void errorHandle(HttpExchange exchange, String msg) throws IOException {
         String response = "Invalid Request! " + msg;
         exchange.sendResponseHeaders(400, response.getBytes().length); //results code and length
         OutputStream os = exchange.getResponseBody();
