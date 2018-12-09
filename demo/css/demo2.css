@@ -1,0 +1,15 @@
+.myDiv {
+	margin-top: 1em;
+}
+
+.btn {
+	margin-left: 6px;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, .btn {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+body {
+	background-image: url("../img/background.png");
+}

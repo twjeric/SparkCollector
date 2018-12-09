@@ -10,42 +10,40 @@
 	</style>
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"></script>
 	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
-	<title>给多个点添加信息窗口</title>
+	<title>SparkCollector Demo</title>
+	<meta name="description" content="SparkCollector Demo">
+	<meta name="author" content="Weijie Tang">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/demo2.css">
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
+
 <body>
-	<div id="allmap"></div>
-	<p>点击标注点，可查看由纯文本构成的简单型信息窗口</p>
+<div class="container">
+  <input type="hidden" id="base_url" name="base_url" value="http://localhost:8504/">
+  <div id="logo" class="myDiv h1 text-primary text-center">SparkCollector</div>
+
+  <div class="row">
+  	<div class="myDiv col-md-7 ml-auto">
+  	  <span class="col-md-3 h4 text-primary">Longitude: </span>
+	  <input class="col-md-3" type="text" id="longitude" name="longitude" value="116.3978">
+	  <span class="col-md-3 h4 text-primary">Latitude: </span>
+	  <input class="col-md-3" type="text" id="latitude" name="latitude" value="39.9033">
+    </div>
+	<div class="myDiv col-md-2 mr-auto">
+	  <input class="btn btn-success" type="submit" value="Start" onclick="send()">
+	  <input class="btn btn-danger" type="submit" value="Stop" onclick="submit(0);">
+	</div>
+  </div>
+
+  <div class="row myDiv">
+  	<div id="allmap"></div>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="js/demo2.js"></script>
+
 </body>
 </html>
-<script type="text/javascript">
-	// 百度地图API功能	
-	map = new BMap.Map("allmap");
-	map.centerAndZoom(new BMap.Point(116.417854,39.921988), 15);
-	var data_info = [[116.417854,39.921988,"地址：北京市东城区王府井大街88号乐天银泰百货八层"],
-					 [116.406605,39.921585,"地址：北京市东城区东华门大街"],
-					 [116.412222,39.912345,"地址：北京市东城区正义路甲5号"]
-					];
-	var opts = {
-				width : 250,     // 信息窗口宽度
-				height: 80,     // 信息窗口高度
-				title : "信息窗口" , // 信息窗口标题
-				enableMessage:true//设置允许信息窗发送短息
-			   };
-	for(var i=0;i<data_info.length;i++){
-		var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]));  // 创建标注
-		var content = data_info[i][2];
-		map.addOverlay(marker);               // 将标注添加到地图中
-		addClickHandler(content,marker);
-	}
-	function addClickHandler(content,marker){
-		marker.addEventListener("click",function(e){
-			openInfo(content,e)}
-		);
-	}
-	function openInfo(content,e){
-		var p = e.target;
-		var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-		var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
-		map.openInfoWindow(infoWindow,point); //开启信息窗口
-	}
-</script>
