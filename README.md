@@ -58,3 +58,5 @@ Output examples:
 
 ## POI Demo
 ![POI Demo](/demo/demo2.gif?raw=true)
+
+Baidu Map API Example: http://lbsyun.baidu.com/jsdemo.htm
