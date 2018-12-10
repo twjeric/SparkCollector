@@ -1,4 +1,4 @@
-# SparkCollector
+# SparkCollector: General-Purpose Data Collector on Spark
 ## Requirements
 
 MacOS with Apache-Spark 2.4.0 and Java8 installed.
